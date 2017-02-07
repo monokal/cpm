@@ -84,7 +84,7 @@ def main():
     :return:
     """
 
-    # A list of supported container runtimes used by argparse below.
+    # A list of supported container runtimes, used by argparse below.
     supported_runtimes = [
         "docker"
     ]
@@ -108,7 +108,7 @@ def main():
     # Subparser arguments.
     subparsers = parser.add_subparsers()
 
-    # "Create" subparser.
+    # Start of "Create" subparser.
     parser_create = subparsers.add_parser(
         "create",
         help="create a new container package"
@@ -116,7 +116,6 @@ def main():
 
     group_create = parser_create.add_argument_group('required arguments')
 
-    supported_runtimes_str = "%s" % ", ".join(map(str, supported_runtimes))
     group_create.add_argument(
         "-r",
         "--runtime",
@@ -125,10 +124,12 @@ def main():
         type=str,
         nargs=1,
         metavar='RUNTIME_NAME',
-        help="the container runtime (choose from: %s)" % supported_runtimes_str
+        help="the container runtime you're using (choose from: %s)" %
+             ", ".join(map(str, supported_runtimes))
     )
 
     parser_create.set_defaults(func=Create)
+    # End of "Create" subparser.
 
     try:
         args = parser.parse_args()

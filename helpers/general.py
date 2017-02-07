@@ -1,4 +1,10 @@
-```
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+class General(object):
+    def get_ascii_logo(self):
+        logo = """
                     .,
                    ,Wt t
                   i#D. ED.                ..       :
@@ -14,4 +20,7 @@
                                          j
 
 Container Package Manager - Simple container distribution abstraction.
-```
+
+"""
+
+        return logo

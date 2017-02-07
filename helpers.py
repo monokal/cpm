@@ -2,8 +2,13 @@
 # -*- coding: utf-8 -*-
 
 
-class General(object):
+class Helpers(object):
     def get_ascii_logo(self):
+        """
+
+        :return:
+        """
+
         logo = """
                     .,
                    ,Wt t
@@ -20,7 +25,6 @@ class General(object):
                                          j
 
 Container Package Manager - Simple container distribution abstraction.
-
 """
 
         return logo

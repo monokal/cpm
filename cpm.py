@@ -20,6 +20,12 @@ Container Package Manager - Simple container distribution abstraction.
 
 """
 
+import argparse
+import logging
+import sys
+
+from helpers import Helpers
+
 __version__ = "1.0.0"
 __author__ = "Daniel Middleton"
 __maintainer__ = "Daniel Middleton"
@@ -28,15 +34,48 @@ __repo__ = "https://github.com/monokal/cpm"
 __status__ = "Production"
 __license__ = "Unlicense"
 
-import argparse
-import logging
-
-logger = logging.getLogger('cpm')
+# Configure global logging.
+try:
+    logger = logging.getLogger('cpm')
+    out = logging.StreamHandler(sys.stdout)
+    out.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("[cpm] %(message)s")
+    out.setFormatter(formatter)
+    logger.addHandler(out)
+    logging.basicConfig(level=logging.DEBUG)
+except:
+    print("Failed to initialise logging.")
 
 
 class Cpm(object):
-    def __init__(self):
+    def __init__(self, args):
+        """
+
+        :param args:
+        """
+
+        self.args = args
+        self.helpers = Helpers()
+
+    def __call__(self):
+        """
+
+        :return:
+        """
+
+        print(self.helpers.get_ascii_logo())
+
+        # Create an instance of and call the given class.
+        target_class = self.args.func(self.args)
+        return target_class()
+
+
+class Create(object):
+    def __init__(self, args):
         pass
+
+    def __call__(self):
+        print("lolffs")
 
 
 def main():
@@ -45,14 +84,10 @@ def main():
     :return:
     """
 
-    # A list of supported container runtimes.
+    # A list of supported container runtimes used by argparse below.
     supported_runtimes = [
-        "docker",
-        "lxd"
+        "docker"
     ]
-
-    # Configure logging.
-    logging.basicConfig(level=logging.DEBUG)
 
     # Configure argument parsing.
     parser = argparse.ArgumentParser(
@@ -73,7 +108,7 @@ def main():
     # Subparser arguments.
     subparsers = parser.add_subparsers()
 
-    # "Create" parser.
+    # "Create" subparser.
     parser_create = subparsers.add_parser(
         "create",
         help="create a new container package"
@@ -90,16 +125,23 @@ def main():
         type=str,
         nargs=1,
         metavar='RUNTIME_NAME',
-        help="where to publish the report (choose from: %s)" %
-             supported_runtimes_str
+        help="the container runtime (choose from: %s)" % supported_runtimes_str
     )
 
     parser_create.set_defaults(func=Create)
 
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except Exception:
+        logger.exception("Failed to parse arguments.")
+
+    # Turn on debug output if -d/--debug was passed.
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+        logger.debug('Debug mode on.')
 
     client = Cpm(args)
-    return client
+    return client()
 
 
 if __name__ == "__main__":

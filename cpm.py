@@ -16,7 +16,7 @@
                     jt E#t      ...      #G      ..
                                          j
 
-Container Package Manager - Simple container distribution abstraction.
+    Container Package Manager - Simple container distribution abstraction.
 
 """
 
@@ -70,12 +70,28 @@ class Cpm(object):
         return target_class()
 
 
-class Create(object):
+class Build(object):
     def __init__(self, args):
         pass
 
     def __call__(self):
-        print("lolffs")
+        pass
+
+
+class Push(object):
+    def __init__(self, args):
+        pass
+
+    def __call__(self):
+        pass
+
+
+class Package(object):
+    def __init__(self, args):
+        pass
+
+    def __call__(self):
+        pass
 
 
 def main():
@@ -108,15 +124,16 @@ def main():
     # Subparser arguments.
     subparsers = parser.add_subparsers()
 
-    # Start of "Create" subparser.
-    parser_create = subparsers.add_parser(
+    #
+    # Start of "Build" subparser.
+    parser_build = subparsers.add_parser(
         "create",
-        help="create a new container package"
+        help="build a new container"
     )
 
-    group_create = parser_create.add_argument_group('required arguments')
+    group_build = parser_build.add_argument_group('required arguments')
 
-    group_create.add_argument(
+    group_build.add_argument(
         "-r",
         "--runtime",
         required=True,
@@ -128,8 +145,34 @@ def main():
              ", ".join(map(str, supported_runtimes))
     )
 
-    parser_create.set_defaults(func=Create)
-    # End of "Create" subparser.
+    parser_build.set_defaults(func=Build)
+    # End of "Build" subparser.
+    #
+
+    #
+    # Start of "Package" subparser.
+    parser_package = subparsers.add_parser(
+        "package",
+        help="create a new container abstraction"
+    )
+
+    group_package = parser_package.add_argument_group('required arguments')
+
+    group_package.add_argument(
+        "-r",
+        "--runtime",
+        required=True,
+        choices=supported_runtimes,
+        type=str,
+        nargs=1,
+        metavar='RUNTIME_NAME',
+        help="the container runtime you're using (choose from: %s)" %
+             ", ".join(map(str, supported_runtimes))
+    )
+
+    parser_package.set_defaults(func=Package)
+    # End of "Package" subparser.
+    #
 
     try:
         args = parser.parse_args()

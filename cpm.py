@@ -45,6 +45,7 @@ try:
     logging.basicConfig(level=logging.DEBUG)
 except:
     print("Failed to initialise logging.")
+    sys.exit(1)
 
 
 class Cpm(object):
@@ -68,22 +69,6 @@ class Cpm(object):
         # Create an instance of and call the given class.
         target_class = self.args.func(self.args)
         return target_class()
-
-
-class Build(object):
-    def __init__(self, args):
-        pass
-
-    def __call__(self):
-        pass
-
-
-class Push(object):
-    def __init__(self, args):
-        pass
-
-    def __call__(self):
-        pass
 
 
 class Package(object):
@@ -125,31 +110,6 @@ def main():
     subparsers = parser.add_subparsers()
 
     #
-    # Start of "Build" subparser.
-    parser_build = subparsers.add_parser(
-        "create",
-        help="build a new container"
-    )
-
-    group_build = parser_build.add_argument_group('required arguments')
-
-    group_build.add_argument(
-        "-r",
-        "--runtime",
-        required=True,
-        choices=supported_runtimes,
-        type=str,
-        nargs=1,
-        metavar='RUNTIME_NAME',
-        help="the container runtime you're using (choose from: %s)" %
-             ", ".join(map(str, supported_runtimes))
-    )
-
-    parser_build.set_defaults(func=Build)
-    # End of "Build" subparser.
-    #
-
-    #
     # Start of "Package" subparser.
     parser_package = subparsers.add_parser(
         "package",
@@ -157,6 +117,16 @@ def main():
     )
 
     group_package = parser_package.add_argument_group('required arguments')
+
+    group_package.add_argument(
+        "-n",
+        "--name",
+        required=True,
+        type=str,
+        nargs=1,
+        metavar='PACKAGE_NAME',
+        help="the name of the new container package"
+    )
 
     group_package.add_argument(
         "-r",
@@ -178,6 +148,7 @@ def main():
         args = parser.parse_args()
     except Exception:
         logger.exception("Failed to parse arguments.")
+        sys.exit(1)
 
     # Turn on debug output if -d/--debug was passed.
     if args.debug:

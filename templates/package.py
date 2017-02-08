@@ -1,85 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-{{image_name}} was generated using using...
-
-                    .,
-                   ,Wt t
-                  i#D. ED.                ..       :
-                 f#f   E#K:              ,W,     .Et
-               .D#i    E##W;            t##,    ,W#t
-              :KW,     E#E##t          L###,   j###t
-              t#f      E#ti##f       .E#j##,  G#fE#t
-               ;#G     E#t ;##D.    ;WW; ##,:K#i E#t
-                :KE.   E#ELLE##K:  j#E.  ##f#W,  E#t
-                 .DW:  E#L;;;;;;,.D#L    ###K:   E#t
-                   L#, E#t      :K#t     ##D.    E#t
-                    jt E#t      ...      #G      ..
-                                         j
-
-    Container Package Manager - Simple container distribution abstraction.
-
-                    https://github.com/monokal/cpm
-
-"""
-
-import requests
-
-__version__ = "{{image_version}}"
-__maintainer__ = "{{image_maintainer_name}}"
-__email__ = "{{image_maintainer_email}}"
-
 
 class Package(object):
     def __init__(self):
-        """
-
-        """
-
         pass
 
     def __call__(self):
-        pass
+        if not self.container_runtime_installed():
+            self.install_container_runtime()
 
-    def docker_module_installed(self):
-        """
+        if not self.python_module_installed():
+            self.install_python_module()
 
-        :return:
-        """
+        self.docker_run()
 
-        url = "https://github.com/docker/docker-py/archive/master.zip"
+    def python_module_installed(self):
+        try:
+            pass
 
-        response = requests.get(url)
+        except:
+            print("Oops.")
 
-        return False
-
-    def docker_executable_installed(self):
-        """
-
-        :return:
-        """
-
+    def container_runtime_installed(self):
         return False
 
     def docker_run(self):
-        """
+        return False
 
-        :return:
-        """
+    def install_python_module(self):
+        return False
 
+    def install_container_runtime(self):
         return False
 
 
-def main():
-    """
-
-    :return:
-    """
-
-    package = Package()
-    return package()
-
-
-if __name__ == "__main__":
-    main()
+package = Package()
+package()
